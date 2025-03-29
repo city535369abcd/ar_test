@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/jeromeetienne/ar.js@1.7.2/aframe/build/aframe-ar.min.js"></script>
+
+    <script>
+        AFRAME.registerComponent('toggle-animation', {
+            init: function () {
+                var el = this.el;
+                var isPlaying = false; // 初始狀態為停止
+
+                function toggleAnimation() {
+                    if (isPlaying) {
+                        el.setAttribute('animation-mixer', 'timeScale: 0'); // 停止動畫
+                    } else {
+                        el.setAttribute('animation-mixer', 'timeScale: 1'); // 播放動畫
+                    }
+                    isPlaying = !isPlaying; // 切換狀態
+                }
+
+                // 電腦點擊
+                el.addEventListener('click', toggleAnimation);
+
+                // 手機觸控
+                el.addEventListener('touchstart', function (event) {
+                    event.preventDefault(); // 避免手機預設行為（如縮放）
+                    toggleAnimation();
+                }, { passive: false });
+            }
+        });
+    </script>
+</head>
+
+<body style="margin: 0px; overflow: hidden;">
+    <a-scene embedded arjs>
+        <!-- Hiro 標記 -->
+        <a-marker preset="hiro">
+            <a-entity 
+                gltf-model="man.glb" 
+                position="0 0 0"
+                scale="1 1 1"
+                animation-mixer
+                toggle-animation>
+            </a-entity>
+        </a-marker>
+
+        <!-- 相機 -->
+        <a-entity camera></a-entity>
+    </a-scene>
+</body>
+
+</html>
